@@ -1,0 +1,6 @@
+# develop start
+start-dev:
+	npm run dev
+
+db-migration:
+	npx prisma migrate dev --name init

@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Match {
+  id              String        @id @default(uuid())
+  creatorName     String      
+  creatorPhone    String      
+  creatorEmail    String      
+  players         Int         
+  location        String      
+  date            DateTime    
+  time            String      
+  duration        Int         
+  isFree          Boolean     
+  pricePerPerson  Float?      
+  accountType     String?     
+  accountNumber   String?     
+  additionalInfo  String?     
+  mapLink         String?     
+  participants    Participant[] @relation("MatchParticipants") 
+}
+
+model Participant {
+  id                Int      @id @default(autoincrement())
+  name              String   
+  phone             String   
+  email             String   
+  paymentReceiptUrl String   
+  matchId           String  
+  match             Match   @relation("MatchParticipants", fields: [matchId], references: [id]) 
+}

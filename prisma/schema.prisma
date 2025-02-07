@@ -18,7 +18,9 @@ model Match {
   creatorName     String      
   creatorPhone    String      
   creatorEmail    String      
-  players         Int         
+  numberPlayers   Int         
+  registeredPlayers Int
+  confirmedPlayers Int           
   location        String      
   date            DateTime    
   time            String      

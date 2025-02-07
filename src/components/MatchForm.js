@@ -10,7 +10,8 @@ export default function MatchForm() {
     creatorEmail: "",
     teamA: "",
     teamB: "",
-    players: 0,
+    numberPlayers: 0,
+    players: 1,
     location: "",
     date: "",
     time: "",
@@ -25,7 +26,7 @@ export default function MatchForm() {
   const router = useRouter();
 
   const handleSubmit = async (e) => {    
-    e.preventDefault();    
+    e.preventDefault();        
     const response = await fetch("/api/matches", {
       method: "POST",
       headers: {
@@ -34,7 +35,8 @@ export default function MatchForm() {
       body: JSON.stringify(formData),
     });
     if (response.ok) {
-      router.push("/");
+      const responseData = await response.json();
+      router.push(`/matches/${responseData.id}`);
     }
   };
 
@@ -79,7 +81,7 @@ export default function MatchForm() {
         <input
           type="number"
           placeholder="Número de Jugadores"
-          value={formData.players === 0 ? "" : formData.players}
+          value={formData.numberPlayers === 0 ? "" : formData.numberPlayers}
           min={0}
           inputMode="numeric"
           pattern="[0-9]*"

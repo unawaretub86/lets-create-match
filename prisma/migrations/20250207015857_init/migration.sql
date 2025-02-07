@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Match" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "creatorName" TEXT NOT NULL,
     "creatorPhone" TEXT NOT NULL,
     "creatorEmail" TEXT NOT NULL,
@@ -22,11 +22,11 @@ CREATE TABLE "Match" (
 -- CreateTable
 CREATE TABLE "Participant" (
     "id" SERIAL NOT NULL,
-    "matchId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "paymentReceiptUrl" TEXT NOT NULL,
+    "matchId" TEXT NOT NULL,
 
     CONSTRAINT "Participant_pkey" PRIMARY KEY ("id")
 );

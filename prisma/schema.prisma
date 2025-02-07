@@ -14,30 +14,30 @@ datasource db {
 }
 
 model Match {
-  id              Int         @id @default(autoincrement())
-  creatorName     String      // Nombre del creador del partido
-  creatorPhone    String      // Teléfono del creador del partido
-  creatorEmail    String      // Correo del creador del partido
-  players         Int         // Número de jugadores por equipo
-  location        String      // Lugar del partido
-  date            DateTime    // Fecha del partido
-  time            String      // Hora del partido
-  duration        Int         // Duración del partido en minutos
-  isFree          Boolean     // ¿El partido es gratis?
-  pricePerPerson  Float?      // Precio por persona (si no es gratis)
-  accountType     String?     // Tipo de cuenta (ej: Ahorros, Corriente)
-  accountNumber   String?     // Número de cuenta
-  additionalInfo  String?     // Información adicional
-  mapLink         String?     // Enlace a Google Maps o Waze
-  participants  Participant[] @relation("MatchParticipants") // Participantes del partido
+  id              String        @id @default(uuid())
+  creatorName     String      
+  creatorPhone    String      
+  creatorEmail    String      
+  players         Int         
+  location        String      
+  date            DateTime    
+  time            String      
+  duration        Int         
+  isFree          Boolean     
+  pricePerPerson  Float?      
+  accountType     String?     
+  accountNumber   String?     
+  additionalInfo  String?     
+  mapLink         String?     
+  participants    Participant[] @relation("MatchParticipants") 
 }
 
 model Participant {
-  id          Int      @id @default(autoincrement())
-  matchId     Int      // ID del partido al que se inscribe
-  name        String   // Nombre del participante
-  phone       String   // Teléfono del participante
-  email       String   // Correo del participante
-  paymentReceiptUrl String // URL del comprobante de pago
-  match    Match?  @relation("MatchParticipants", fields: [matchId], references: [id])
+  id                Int      @id @default(autoincrement())
+  name              String   
+  phone             String   
+  email             String   
+  paymentReceiptUrl String   
+  matchId           String  
+  match             Match   @relation("MatchParticipants", fields: [matchId], references: [id]) 
 }

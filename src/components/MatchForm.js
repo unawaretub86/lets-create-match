@@ -8,10 +8,9 @@ export default function MatchForm() {
     creatorName: "",
     creatorPhone: "",
     creatorEmail: "",
-    teamA: "",
-    teamB: "",
-    numberPlayers: 0,
-    players: 1,
+    numberPlayers: 1,
+    registeredPlayers: 0,
+    confirmedPlayers: 0,
     location: "",
     date: "",
     time: "",
@@ -89,7 +88,7 @@ export default function MatchForm() {
             const value = e.target.value;
             setFormData({
               ...formData,
-              players: value === "" ? "" : parseInt(value),
+              numberPlayers: value === "" ? "" : parseInt(value),
             });
           }}
           className="text-black w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

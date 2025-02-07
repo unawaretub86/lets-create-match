@@ -1,42 +1,36 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ParticipantForm() {
+export default function ParticipantForm({ matchId }) {
   const [formData, setFormData] = useState({
-    matchId: '',
-    name: '',
-    phone: '',
-    email: '',
-    paymentReceiptUrl: '',
+    matchId: matchId,
+    name: "",
+    phone: "",
+    email: "",
+    paymentReceiptUrl: "",
   });
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('/api/participants', {
-      method: 'POST',
+
+    const response = await fetch("/api/participants", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
     });
     if (response.ok) {
-      router.push('/');
+      router.push("/");
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <input
-        type="number"
-        placeholder="ID del Partido"
-        value={formData.matchId}
-        onChange={(e) => setFormData({ ...formData, matchId: parseInt(e.target.value) })}
-        className="w-full p-2 border rounded"
-      />
       <input
         type="text"
         placeholder="Nombre del Participante"
@@ -62,7 +56,9 @@ export default function ParticipantForm() {
         type="text"
         placeholder="URL del Comprobante de Pago"
         value={formData.paymentReceiptUrl}
-        onChange={(e) => setFormData({ ...formData, paymentReceiptUrl: e.target.value })}
+        onChange={(e) =>
+          setFormData({ ...formData, paymentReceiptUrl: e.target.value })
+        }
         className="w-full p-2 border rounded"
       />
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">

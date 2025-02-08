@@ -24,8 +24,8 @@ export default function MatchForm() {
   });
   const router = useRouter();
 
-  const handleSubmit = async (e) => {    
-    e.preventDefault();        
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const response = await fetch("/api/matches", {
       method: "POST",
       headers: {

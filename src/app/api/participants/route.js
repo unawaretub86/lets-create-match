@@ -7,16 +7,17 @@ export async function POST(req) {
     const body = await req.json();
 
     const { matchId, name, phone, email, paymentReceiptUrl } = body;
-  
+
     const match = await prisma.match.findUnique({
-      where: { id: matchId }
+      where: { id: matchId },
     });
 
     if (!match) {
-      return response.json(
-        { error: "El partido no existe" },
-        { status: 404 }
-      );
+      return response.json({ error: "El partido no existe" }, { status: 404 });
+    }
+
+    if (match.confirmedPlayers >= match.numberPlayers) {
+      return response.json({ error: "El partido esta lleno" }, { status: 409 });
     }
 
     const participant = await prisma.participant.create({
@@ -32,18 +33,20 @@ export async function POST(req) {
     match.registeredPlayers += 1;
 
     // Actualizar partido en la base de datos
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/matches`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: match,
-    });
-
-    const updateResult = await response.json();
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/matches`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          match,
+        }),
+      }
+    );
 
     if (!response.ok) {
-      console.error("Error actualizando el match:", updateResult.error);
       return Response.json(
         { error: "Error actualizando el partido" },
         { status: 500 }
@@ -51,7 +54,11 @@ export async function POST(req) {
     }
 
     return Response.json(
-      { message: "Participante creado y partido actualizado correctamente", match, participant },
+      {
+        message: "Participante creado y partido actualizado correctamente",
+        match,
+        participant,
+      },
       { status: 200 }
     );
   } catch (error) {

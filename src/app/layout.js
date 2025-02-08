@@ -20,9 +20,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className="bg-black-100">
-        <main className="container mx-auto p-4">
-          {children}
-        </main>
+        <main className="container mx-auto p-4">{children}</main>
       </body>
     </html>
   );

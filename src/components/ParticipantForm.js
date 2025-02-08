@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -25,7 +23,18 @@ export default function ParticipantForm({ matchId }) {
       body: JSON.stringify(formData),
     });
     if (response.ok) {
-      router.push("/");
+      const { match } = await response.json();
+
+      // Reiniciar el formulario
+      setFormData({
+        matchId: matchId,
+        name: "",
+        phone: "",
+        email: "",
+        paymentReceiptUrl: "",
+      });
+
+      router.refresh(`/matches/${match.id}`);
     }
   };
 

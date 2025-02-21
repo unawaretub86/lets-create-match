@@ -29,6 +29,10 @@ CREATE TABLE "Participant" (
     "email" TEXT NOT NULL,
     "paymentReceiptUrl" TEXT NOT NULL,
     "matchId" TEXT NOT NULL,
+    "role" TEXT,
+    "isConfirmed" BOOLEAN DEFAULT false,
+    "isPaid" BOOLEAN DEFAULT false,
+    "isWaiting" BOOLEAN DEFAULT false,
 
     CONSTRAINT "Participant_pkey" PRIMARY KEY ("id")
 );

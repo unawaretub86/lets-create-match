@@ -3,11 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 
 const prisma = new PrismaClient();
 
-export async function GET({ params }) {
+export async function GET(req, { params }) {
   const { id } = params;
 
   try {
-    const match = await prisma.match.find((match) => match.id === id);
+    const match = await prisma.match.find((match) => match.id === id, log);
 
     if (!match) {
       return Response.json(
@@ -51,8 +51,6 @@ export async function POST(req) {
       mapLink,
     } = body;
 
-    // hay que hacer una Validación de datos
-
     const id = uuidv4();
 
     const match = await prisma.match.create({
@@ -77,6 +75,37 @@ export async function POST(req) {
       },
     });
 
+    const participant = {
+      matchId: match.id,
+      name: creatorName,
+      phone: creatorPhone,
+      email: creatorEmail,
+      paymentReceiptUrl: "",
+      isConfirmed: true,
+      role: "jugador",
+    }
+
+    // Crear participante del creador del partido
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/participants`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(
+          participant,
+        ),
+      }
+    );
+
+    if (!response.ok) {
+      return Response.json(
+        { error: "Error creando participante" },
+        { status: 500 }
+      );
+    }
+
     return Response.json(
       { message: "Match creado correctamente", id, match },
       { status: 200 }
@@ -89,37 +118,5 @@ export async function POST(req) {
     );
   } finally {
     await prisma.$disconnect(); // Cerrar la conexión con la base de datos
-  }
-}
-
-export async function PATCH(req) {
-  try {
-    const body = await req.json();
-    const { match } = body;
-
-    if (!match.id) {
-      return Response.json(
-        { error: "matchId es obligatorio" },
-        { status: 400 }
-      );
-    }
-
-    const updatedMatch = await prisma.match.update({
-      where: { id: match.id },
-      data: match,
-    });
-
-    return Response.json(
-      { message: "Match actualizado correctamente", updatedMatch },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error actualizando el match:", error);
-    return Response.json(
-      { error: "Error procesando la solicitud" },
-      { status: 500 }
-    );
-  } finally {
-    await prisma.$disconnect();
   }
 }

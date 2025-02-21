@@ -41,5 +41,9 @@ model Participant {
   email             String   
   paymentReceiptUrl String   
   matchId           String  
+  role             String?   
+  isConfirmed       Boolean? @default(false)
+  isPaid            Boolean?  @default(false)
+  isWaiting            Boolean?  @default(false)
   match             Match   @relation("MatchParticipants", fields: [matchId], references: [id]) 
 }

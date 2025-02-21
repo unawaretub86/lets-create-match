@@ -6,7 +6,15 @@ export async function POST(req) {
   try {
     const body = await req.json();
 
-    const { matchId, name, phone, email, paymentReceiptUrl } = body;
+    const {
+      matchId,
+      name,
+      phone,
+      email,
+      paymentReceiptUrl,
+      isConfirmed,
+      role,
+    } = body;
 
     const match = await prisma.match.findUnique({
       where: { id: matchId },
@@ -27,14 +35,15 @@ export async function POST(req) {
         phone,
         email,
         paymentReceiptUrl,
+        role,
+        isConfirmed,
       },
     });
 
     match.registeredPlayers += 1;
 
-    // Actualizar partido en la base de datos
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/matches`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/matches/${matchId}`,
       {
         method: "PATCH",
         headers: {
@@ -62,7 +71,7 @@ export async function POST(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error creando el participant:", error);
+    console.error("Error creando el participante:", error);
     return Response.json(
       { error: "Error procesando la solicitud" },
       { status: 500 }

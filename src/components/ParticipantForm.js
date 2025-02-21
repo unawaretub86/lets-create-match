@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ParticipantForm({ matchId }) {
+export default function ParticipantForm({ matchId, onSubmitSuccess  }) {
   const [formData, setFormData] = useState({
     matchId: matchId,
     name: "",
     phone: "",
     email: "",
     paymentReceiptUrl: "",
+    role: "",
   });
-
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,18 +22,19 @@ export default function ParticipantForm({ matchId }) {
       body: JSON.stringify(formData),
     });
     if (response.ok) {
-      const { match } = await response.json();
-
-      // Reiniciar el formulario
       setFormData({
         matchId: matchId,
         name: "",
         phone: "",
         email: "",
         paymentReceiptUrl: "",
+        role: "",
       });
 
-      router.refresh(`/matches/${match.id}`);
+      // Call the success callback
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     }
   };
 
@@ -45,7 +45,7 @@ export default function ParticipantForm({ matchId }) {
         placeholder="Nombre del Participante"
         value={formData.name}
         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-        className="w-full p-2 border rounded"
+        className="w-full p-2 border rounded text-black"
       />
       <input
         type="text"
@@ -61,7 +61,16 @@ export default function ParticipantForm({ matchId }) {
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         className="w-full p-2 border rounded"
       />
-      <input
+      <select
+        value={formData.role}
+        onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+        className="w-full p-2 border rounded text-black"
+      >
+        <option value="">Seleccionar Posición</option>
+        <option value="portero">Portero</option>
+        <option value="jugador">Jugador</option>
+      </select>
+      {/* <input
         type="text"
         placeholder="URL del Comprobante de Pago"
         value={formData.paymentReceiptUrl}
@@ -69,7 +78,7 @@ export default function ParticipantForm({ matchId }) {
           setFormData({ ...formData, paymentReceiptUrl: e.target.value })
         }
         className="w-full p-2 border rounded"
-      />
+      /> */}
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">
         Inscribirse
       </button>
